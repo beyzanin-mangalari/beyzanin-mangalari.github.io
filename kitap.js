@@ -8,6 +8,9 @@
   const ACI = 96;            // tam çevrilmede açı; 90°'yi geçince sayfa görünmez olur
   const ORIGIN = 0.12;       // CSS perspective-origin x (12%)
   let flip = false, W = 0, H = 0, T = 0, R = 0, sayfalar = [], raf = 0, ilk = true;
+  // destekleyen tarayıcıda çevirmeyi CSS kaydırma animasyonu yapar (compositor, ekran Hz'inde); JS yalnız ses + inert
+  const SDA = !!(window.CSS && CSS.supports && CSS.supports("animation-timeline: scroll()"));
+  const sdaStil = document.createElement("style"); document.head.appendChild(sdaStil);
 
   const yap = (leaf, cast) => ({ leaf, cast: $(cast), shade: leaf.querySelector(".shade"), p: -1, yan: false });
   const HERO = yap(lHero, "#castHero"), SEPET = yap(lSepet, "#castSepet");
@@ -28,7 +31,24 @@
     R = flip ? sayfalar[sayfalar.length - 1].a + T : 0;
     room.style.height = R + "px";
     for (const s of [HERO, SEPET]) s.p = -1;     // yeniden çiz
+    if (SDA) sdaKur();
     ciz();
+  }
+
+  // çevrilen kenarın perspektif izdüşümünü izleyen gölge, CSS keyframe olarak (genişlik değişince yeniden)
+  function sdaKur(){
+    const persp = 2.5 * W, ox = W * ORIGIN, kf = [];
+    for (const [ad, s] of [["castHero", HERO], ["castSepet", SEPET]]){
+      for (const el of [s.leaf, s.cast]){ el.style.setProperty("--a0", s.a + "px"); el.style.setProperty("--a1", (s.a + T) + "px"); }
+      let k = "";
+      for (let i = 0; i <= 20; i++){
+        const p = i / 20, r = p * ACI * Math.PI / 180;
+        const ex = ox + (W * Math.cos(r) - ox) * persp / Math.max(1, persp - W * Math.sin(r));
+        k += `${i * 5}%{transform:translate3d(${Math.max(0, ex).toFixed(1)}px,0,0);opacity:${(Math.sin(p * Math.PI) * 0.95).toFixed(3)}}`;
+      }
+      kf.push(`@keyframes k-${ad}{${k}}html.flip.sda #${ad}{animation-name:k-${ad}}`);
+    }
+    sdaStil.textContent = kf.join("");
   }
 
   function ciz(){
@@ -40,6 +60,8 @@
       if (p === s.p) continue;
       s.p = p;
       const th = p * ACI, r = th * Math.PI / 180;
+      s.leaf.inert = p >= 1;
+      if (SDA){ const yan = p >= 0.5; if (yan !== s.yan){ s.yan = yan; if (!ilk) hisirti(yan ? 1 : -1, gecis++ * 0.11); } continue; }
       s.leaf.style.transform = p > 0 && p < 1 ? `rotateY(${-th.toFixed(2)}deg)` : "";
       s.leaf.style.visibility = p >= 1 ? "hidden" : "";
       s.leaf.inert = p >= 1;
@@ -93,14 +115,15 @@
   function mod(){
     flip = !mq.matches;
     root.classList.toggle("flip", flip);
+    root.classList.toggle("sda", flip && SDA);
     sesBtn.hidden = !flip;
     olc(true);
     if (!flip) for (const s of [HERO, SEPET]){ s.leaf.style.transform = s.leaf.style.visibility = ""; s.leaf.inert = false; }
   }
   mq.addEventListener ? mq.addEventListener("change", mod) : mq.addListener(mod);
 
-  // ---------- ses: gürültü patlaması → bant geçiren süpürme → kâğıt hışırtısı ----------
-  let ac = null, gurultu = null, ses = !mq.matches;
+  // ---------- ses: gerçek kitap sayfası kaydı (Kenney RPG Audio, CC0), Web Audio ile çalınır ----------
+  let ac = null, kayitlar = [], ses = !mq.matches;
   try { const v = localStorage.getItem("bm_ses"); if (v !== null) ses = v === "1"; } catch (e) {}
   const sesGoster = () => { sesBtn.setAttribute("aria-pressed", String(ses)); sesBtn.title = ses ? "Sayfa sesi açık" : "Sayfa sesi kapalı"; };
 
@@ -110,12 +133,10 @@
         const C = window.AudioContext || window.webkitAudioContext;
         if (!C) return;
         ac = new C();
-        const n = Math.floor(ac.sampleRate * 0.5);
-        gurultu = ac.createBuffer(1, n, ac.sampleRate);
-        const d = gurultu.getChannelData(0);
-        // seyrek çıtırtılı gürültü: düz beyaz gürültüden daha "kâğıt"
-        for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (Math.random() < 0.12 ? 1 : 0.4);
         const s = ac.createBufferSource(); s.buffer = ac.createBuffer(1, 1, ac.sampleRate); s.connect(ac.destination); s.start(0); // iOS kilidi
+        for (const f of ["ses/sayfa1.mp3", "ses/sayfa2.mp3"])
+          fetch(f).then(r => r.arrayBuffer()).then(b => new Promise((ok, no) => ac.decodeAudioData(b, ok, no)))
+            .then(buf => kayitlar.push(buf)).catch(() => {});
       }
       if (ac.state === "suspended") ac.resume().catch(() => {});
     } catch (e) { ac = null; }
@@ -123,38 +144,21 @@
   for (const t of ["pointerdown", "keydown", "touchend"]) addEventListener(t, ac0, {capture:true, passive:true});
 
   function hisirti(yon, gecikme = 0){
-    if (!ses || !flip || !ac || ac.state !== "running") return;
+    if (!ses || !flip || !ac || ac.state !== "running" || !kayitlar.length) return;
     try {
-      const t = ac.currentTime + gecikme, oran = 0.9 + Math.random() * 0.2;
-      // 1) süpürme: sayfa havayı yarar
-      const src = ac.createBufferSource(); src.buffer = gurultu; src.playbackRate.value = oran;
-      const bp = ac.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 0.8;
-      bp.frequency.setValueAtTime(yon > 0 ? 900 : 2400, t);
-      bp.frequency.exponentialRampToValueAtTime(yon > 0 ? 3600 : 1200, t + 0.24);
-      const hp = ac.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 380;
-      const g = ac.createGain();
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(1.5, t + 0.05);
-      g.gain.exponentialRampToValueAtTime(0.5, t + 0.17);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.34);
-      src.connect(bp); bp.connect(hp); hp.connect(g); g.connect(ac.destination);
-      src.start(t, Math.random() * 0.1); src.stop(t + 0.36);
-      // 2) şaplak: sayfa yerine oturur
-      const s2 = ac.createBufferSource(); s2.buffer = gurultu;
-      const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2200;
-      const g2 = ac.createGain();
-      g2.gain.setValueAtTime(0.0001, t + 0.2);
-      g2.gain.exponentialRampToValueAtTime(1.2, t + 0.212);
-      g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.27);
-      s2.connect(lp); lp.connect(g2); g2.connect(ac.destination);
-      s2.start(t + 0.2, 0.25); s2.stop(t + 0.28);
+      const src = ac.createBufferSource(), g = ac.createGain();
+      src.buffer = kayitlar[Math.floor(Math.random() * kayitlar.length)];
+      src.playbackRate.value = (yon > 0 ? 1 : 0.94) + Math.random() * 0.08; // her çevirme birebir aynı duyulmasın
+      g.gain.value = 0.9;
+      src.connect(g); g.connect(ac.destination);
+      src.start(ac.currentTime + gecikme);
     } catch (e) {}
   }
 
   sesBtn.addEventListener("click", () => {
     ses = !ses; sesGoster();
     try { localStorage.setItem("bm_ses", ses ? "1" : "0"); } catch (e) {}
-    if (ses){ ac0(); setTimeout(() => hisirti(1), 60); }
+    if (ses){ ac0(); setTimeout(() => hisirti(1), 400); }
   });
   sesGoster();
   mod();

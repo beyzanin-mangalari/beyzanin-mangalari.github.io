@@ -91,7 +91,7 @@ h1 span{display:block;color:var(--panel);-webkit-text-stroke:3px var(--text);pai
 .store{background:var(--panel);color:var(--text);border:3px solid var(--line);box-shadow:5px 5px 0 var(--stext);padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .store.best{border-color:var(--red);box-shadow:6px 6px 0 var(--red)}
 .store header{display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:3px solid var(--line);padding-bottom:8px}
-.store h3{margin:0;font:400 20px/1.1 var(--display);overflow-wrap:anywhere}
+.store h3{margin:0;font:400 clamp(16px,1.6vw,20px)/1.1 var(--display);overflow-wrap:normal;word-break:normal;min-width:0}
 .store .cnt{font:900 12px var(--body);background:var(--text);color:var(--panel);padding:3px 8px;white-space:nowrap}
 .tags{display:flex;flex-wrap:wrap;gap:6px}
 .tag{font:900 12px var(--body);padding:3px 10px;transform:skewX(-10deg);border:2px solid var(--line);color:var(--text)}
@@ -176,7 +176,7 @@ label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:900}
 /* ================= KİTAP MODU (kitap.js html.flip ekler; hareket azaltma açıksa eklenmez) ================= */
 html.flip .stage{position:fixed;inset:0;z-index:5;overflow:hidden;pointer-events:none;perspective:250vw;perspective-origin:12% 50%}
 html.flip .leaf{position:absolute;inset:0;pointer-events:auto;overflow-x:hidden;overflow-y:auto;overscroll-behavior-y:auto;scrollbar-width:thin;
-  transform-origin:0 50%;-webkit-backface-visibility:hidden;backface-visibility:hidden;will-change:transform}
+  transform-origin:0 50%;-webkit-backface-visibility:hidden;backface-visibility:hidden;will-change:transform;contain:paint}
 html.flip #leafHero{z-index:4}
 html.flip #castHero{z-index:3}
 html.flip #leafSepet{z-index:2}
@@ -188,11 +188,18 @@ html.flip .leaf .pno{position:absolute;left:50%;bottom:max(8px,env(safe-area-ins
 html.flip .shelfwrap{position:relative}
 html.flip .shelf{position:-webkit-sticky;position:sticky;top:0}
 /* çevrilen sayfanın ışığı: sırta doğru gölge, kalkan kenarda parlama */
-html.flip .shade{display:block;position:absolute;inset:0;pointer-events:none;opacity:0;z-index:3;
+html.flip .shade{display:block;position:absolute;inset:0;pointer-events:none;opacity:0;z-index:3;will-change:opacity;
   background:linear-gradient(to left,rgba(255,250,235,.3) 0,rgba(255,250,235,.08) 1.5%,rgba(0,0,0,0) 14%,rgba(3,5,12,.25) 60%,rgba(3,5,12,.7) 100%)}
 /* alttaki sayfaya düşen gölge: çevrilen kenarı izler */
 html.flip .cast{display:block;position:absolute;top:0;bottom:0;left:0;width:60%;opacity:0;pointer-events:none;will-change:transform,opacity;
   background:linear-gradient(to right,rgba(2,4,10,.7),rgba(2,4,10,.32) 25%,rgba(2,4,10,0) 70%)}
+/* Kaydırmaya bağlı CSS animasyonu (destekleyen tarayıcılarda): çevirme tarayıcının compositor'ünde, ekran tazeleme hızında akar.
+   Aralıklar (--a0/--a1) ve gölge keyframe'leri kitap.js'ten gelir. */
+html.flip.sda .leaf,html.flip.sda .leaf .shade,html.flip.sda .cast{animation-timing-function:linear;animation-fill-mode:both;animation-timeline:scroll(root block);animation-range:var(--a0) var(--a1)}
+html.flip.sda .leaf{animation-name:cevir}
+html.flip.sda .leaf .shade{animation-name:golge}
+@keyframes cevir{from{transform:rotateY(0deg);visibility:visible}to{transform:rotateY(-96deg);visibility:hidden}}
+@keyframes golge{0%{opacity:0}20%{opacity:.38}40%{opacity:.71}60%{opacity:.97}68%{opacity:1}99.9%{opacity:1}100%{opacity:0}}
 /* kıvrık sayfa köşesi: çevrilebileceğini söyler */
 html.flip .kulak{display:block;position:absolute;right:0;bottom:0;width:64px;height:64px;z-index:2;pointer-events:none;transform-origin:100% 100%;
   background:linear-gradient(315deg,rgba(2,4,10,.85) 0 46%,transparent 46.5%),linear-gradient(135deg,transparent 0 49.5%,var(--panel) 50% 78%,#cdbf9f 100%);
