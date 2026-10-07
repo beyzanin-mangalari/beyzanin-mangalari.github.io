@@ -1,5 +1,6 @@
 // Türk kitap/manga mağazaları için arama tarayıcıları. Bağımlılık yok: Node 20+ yerleşik fetch.
-// Her magaza.ara(sorgu) -> [{ baslik, url, fiyat (TL | null), stok (bool) }], asla throw etmez.
+// Her magaza.ara(sorgu) -> [{ baslik, url, fiyat (TL | null), stok (bool), yayinci?, dil?, kategori? }], asla throw etmez.
+// stok yalnızca şu an sepete eklenip gönderilebilen ilan için true (ön sipariş / tükendi false).
 
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
 
@@ -28,6 +29,9 @@ const tl = (s) => {
 const bul = (s, re) => s.match(re)?.[1];
 const sayfaSiniri = 3; // sayfalı mağazalarda en fazla bu kadar sayfa (ilk sayfalar alaka sıralı, sonrası çoğunlukla bulanık eşleşme)
 
+// bu çalıştırmada hata veren (engellenen) mağaza id'leri; tara.mjs önceki sonucu korumak için okur
+export const HATALI = new Set();
+
 function magaza(id, ad, fn) {
   return {
     id, ad,
@@ -37,7 +41,7 @@ function magaza(id, ad, fn) {
         // Bazı mağazalar kesme işaretini harfiyen eşliyor (Kitapsepeti "Hikaru'nun" bulmaz, "Hikaru’nun" bulur): boşsa diğeriyle dene
         const diger = sorgu.replace(/['’]/g, (c) => (c === "'" ? "’" : "'"));
         return r.length || diger === sorgu ? r : await fn(diger);
-      } catch (e) { console.error(`[${id}] ${e.message}`); return []; }
+      } catch (e) { console.error(`[${id}] ${e.message}`); HATALI.add(id); return []; }
     },
   };
 }
@@ -76,6 +80,7 @@ async function dr(q) {
         // "Sepette" kampanya fiyatı varsa o ödenen fiyat, yoksa normal fiyat
         fiyat: tl(bul(b, /campaign-price-old">[^<]*<\/span>\s*<span>([^<]*)/) ?? bul(b, /class="prd-price"[^>]*>([^<]*)/)),
         stok: !/item_stock&quot;:&quot;No/.test(b) && /js-add-basket/.test(b),
+        dil: coz(bul(b, /data-prd-lang="([^"]*)"/) ?? ""), // "Türkçe" / "İngilizce"
       });
     }
     const toplam = +bul(h, /js-total-product-page" value="(\d+)"/) || 0;
@@ -93,9 +98,12 @@ async function bkm(q) {
     method: "POST",
     headers: { "X-Algolia-Application-Id": "G3KZ735F6S", "X-Algolia-API-Key": "f19d4f1ec19fc607b496d59f306b719a", "Content-Type": "application/json" },
     // typoTolerance "min": tam eşleşme varsa "Dünyadan" gibi yazım-yakını çöpleri getirmez
-    body: JSON.stringify({ query: q, hitsPerPage: 100, typoTolerance: "min", attributesToRetrieve: ["title", "url", "price", "in_stock"], attributesToHighlight: [] }),
+    body: JSON.stringify({ query: q, hitsPerPage: 100, typoTolerance: "min", attributesToRetrieve: ["title", "url", "price", "in_stock", "publisher", "categories"], attributesToHighlight: [] }),
   });
-  return j.hits.map((x) => ({ baslik: coz(x.title), url: new URL(x.url, "https://www.bkmkitap.com").href, fiyat: tl(x.price), stok: x.in_stock !== false }));
+  return j.hits.map((x) => ({
+    baslik: coz(x.title), url: new URL(x.url, "https://www.bkmkitap.com").href, fiyat: tl(x.price), stok: x.in_stock === true,
+    yayinci: x.publisher?.name ?? "", kategori: (x.categories ?? []).map((c) => c.name).join(", "), // novel'lar "Bilim Kurgu Romanları"
+  }));
 }
 
 // Kitapsepeti (T-Soft): sunucu tarafı liste, pg=N ile sayfalı. Stok: kartta "out-of-stock" (Tükendi) rozeti yoksa var.
@@ -135,6 +143,7 @@ async function gerekli(q) {
         url: new URL(coz(a[1]), "https://www.gerekliseyler.com.tr").href,
         fiyat: tl(bul(b, /showcase-price-new">([^<]*)/)),
         stok: !/no-stock-button|sold-out-label/.test(b) && /data-selector="add-to-cart"/.test(b),
+        yayinci: metin(bul(b, /showcase-brand">\s*<a[^>]*>([^<]*)/) ?? ""), // ithal baskılarda Kodansha, Viz Media...
       });
     }
     const sonraki = bul(h, /paginate-right paginate-active">\s*<a href="([^"]+)"/);
@@ -143,7 +152,7 @@ async function gerekli(q) {
   return sonuc;
 }
 
-// Destek Dükkan: sunucu tarafı liste, &p=N. Stok: kartta "book outofstock" sınıfı yoksa var.
+// Destek Dükkan: sunucu tarafı liste, &p=N. Stok: kartta "book outofstock" sınıfı ve "Ön Siparişte" etiketi yoksa var.
 async function destek(q) {
   const sonuc = [];
   for (let p = 1; p <= sayfaSiniri; p++) {
@@ -155,7 +164,7 @@ async function destek(q) {
         baslik: metin(a[2]),
         url: new URL(coz(a[1]), "https://destekdukkan.com").href,
         fiyat: tl(bul(b, /class="fiyat" data-price="([^"]*)"/)),
-        stok: !/^\s*outofstock/.test(b) && /h-sepete-ekle/.test(b),
+        stok: !/^\s*outofstock/.test(b) && !/onsiparis-arrow/.test(b) && /h-sepete-ekle/.test(b), // ön sipariş stok sayılmaz
       });
     }
     if (!new RegExp(`[&;]p=${p + 1}"`).test(h)) break;
@@ -171,3 +180,19 @@ export const MAGAZALAR = [
   magaza("gerekliseyler", "Gerekli Şeyler", gerekli),
   magaza("destekdukkan", "Destek Dükkan", destek),
 ];
+
+// Ürün sayfasını açıp arama kartının söylediğini doğrular: { url (yönlendirme sonrası), baslik (<title>), stok } | null.
+// Arama kartı ön siparişi göstermeyebiliyor (D&R kartı "sepete ekle", sayfası "Ön Sipariş Verin"), o yüzden stok sayfadan:
+// altı mağazanın hepsi schema.org availability yazıyor; InStock olmalı ve ön sipariş yazısı olmamalı.
+export async function urunKontrol(url) {
+  try {
+    const r = await fetch(url, { headers: { "User-Agent": UA, "Accept-Language": "tr-TR,tr;q=0.9" }, signal: AbortSignal.timeout(20_000) });
+    if (!r.ok) return null;
+    const h = await r.text();
+    return {
+      url: r.url,
+      baslik: metin(bul(h, /<title>([^<]*)/) ?? ""),
+      stok: /schema\.org\\?\/InStock/.test(h) && !/schema\.org\\?\/(OutOfStock|PreOrder|SoldOut|Discontinued)|Ön Sipariş Verin|Ön Siparişte/.test(h),
+    };
+  } catch { return null; }
+}
