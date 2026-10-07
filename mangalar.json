@@ -13,7 +13,8 @@
   "cikan": 11,
   "alinan": 11,
   "link": "",
-  "kapak": "kapaklar/vinland.jpg"
+  "kapak": "kapaklar/vinland.jpg",
+  "ara": "Vinland Destanı"
  },
  {
   "id": "mashle",
@@ -29,7 +30,8 @@
   "cikan": 6,
   "alinan": 6,
   "link": "",
-  "kapak": "kapaklar/sakamoto.jpg"
+  "kapak": "kapaklar/sakamoto.jpg",
+  "ara": "Sakamoto Günleri"
  },
  {
   "id": "dandadan",
@@ -69,7 +71,8 @@
   "cikan": 1,
   "alinan": 1,
   "link": "",
-  "kapak": "kapaklar/eldenring.jpg"
+  "kapak": "kapaklar/eldenring.jpg",
+  "ara": "Altın Ağaç'a Yolculuk"
  },
  {
   "id": "nakamura",
@@ -85,7 +88,8 @@
   "cikan": 2,
   "alinan": 2,
   "link": "",
-  "kapak": "kapaklar/hellsparadise.png"
+  "kapak": "kapaklar/hellsparadise.png",
+  "ara": "Cehennemdeki Cennet"
  },
  {
   "id": "titan",
