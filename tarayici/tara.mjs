@@ -1,7 +1,9 @@
 // Kullanım: node tarayici/tara.mjs <mangalar.json> <stok.json>
 // Her seriyi her mağazada arar, cilt numarasını başlıktan çıkarır, stok.json yazar.
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
-import { MAGAZALAR, HATALI, urunKontrol } from "./magazalar.mjs";
+import { MAGAZALAR as ANA, HATALI, urunKontrol } from "./magazalar.mjs";
+import { EK_MAGAZALAR } from "./magazalar-ek.mjs";
+const MAGAZALAR = [...ANA, ...EK_MAGAZALAR];
 import { ciltNo, yabanci, turkceCilt, kesinCilt, urunSayfasi } from "./cilt.mjs";
 
 const [, , girdi = "mangalar.json", cikti = "stok.json"] = process.argv;

@@ -1,6 +1,7 @@
 // Ek mağazalar: Tamadres, Amazon TR, Hepsiburada, Trendyol. magazalar.mjs ile aynı sözleşme:
 // ara(sorgu) -> [{ baslik, url, fiyat (TL | null), stok (bool) }], asla throw etmez. Bağımlılık yok (Node 20+ fetch; Trendyol için sistem curl'ü).
 import { execFile } from "node:child_process";
+import { HATALI } from "./magazalar.mjs";
 import { promisify } from "node:util";
 
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
@@ -48,7 +49,7 @@ function magaza(id, ad, fn) {
         const r = await fn(sorgu);
         const diger = sorgu.replace(/['’]/g, (c) => (c === "'" ? "’" : "'"));
         return r.length || diger === sorgu ? r : await fn(diger);
-      } catch (e) { console.error(`[${id}] ${e.message}`); return []; }
+      } catch (e) { console.error(`[${id}] ${e.message}`); HATALI.add(id); return []; }
     },
   };
 }
