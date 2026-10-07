@@ -200,6 +200,9 @@ html.flip.sda .leaf{animation-name:cevir}
 html.flip.sda .leaf .shade{animation-name:golge}
 @keyframes cevir{from{transform:rotateY(0deg);visibility:visible}to{transform:rotateY(-96deg);visibility:hidden}}
 @keyframes golge{0%{opacity:0}20%{opacity:.38}40%{opacity:.71}60%{opacity:.97}68%{opacity:1}99.9%{opacity:1}100%{opacity:0}}
+/* easter egg: yırtılan sayfa F5'e kadar gizli; düşen parçalar sahnenin en üstünde */
+html.flip .leaf.yirtik{visibility:hidden!important;animation:none!important;transform:none!important}
+html.flip .yirtikParca{z-index:9!important;animation:none!important;visibility:visible!important;pointer-events:none;will-change:transform;filter:drop-shadow(0 18px 24px rgba(0,0,0,.45))}
 /* kıvrık sayfa köşesi: çevrilebileceğini söyler */
 html.flip .kulak{display:block;position:absolute;right:0;bottom:0;width:64px;height:64px;z-index:2;pointer-events:none;transform-origin:100% 100%;
   background:linear-gradient(315deg,rgba(2,4,10,.85) 0 46%,transparent 46.5%),linear-gradient(135deg,transparent 0 49.5%,var(--panel) 50% 78%,#cdbf9f 100%);
