@@ -33,15 +33,19 @@ function renderSepet(){
   el.hidden = !eksik.length;
   if (!eksik.length) return;
   const zaman = STOK?.guncel ? new Date(STOK.guncel).toLocaleString("tr-TR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}) : null;
-  el.innerHTML = `<h2>Eksikleri tamamla</h2>
-    <p class="alt">${eksik.length} eksik cilt var. ${zaman ? `Mağazalar en son ${zaman}'de tarandı, her saat yenilenir.` : "Mağaza taraması henüz çalışmadı."}
-    ${liste.length>1 ? "Tek seferde en çok eksiği alabileceğin mağaza en üstte." : ""}</p>
-    ${liste.length ? `<div class="stores">${liste.map(s=>`<article class="store${s.ur.length===eksik.length?" all":""}">
+  // her eksik cildin en ucuz fiyatı (stoklu fiyata göre sıralı döner)
+  const enUcuz = {}; for (const e of eksik){ const s = stoklu(e.m, e.n)[0]; if (s?.fiyat!=null) enUcuz[e.m.id+"/"+e.n] = s.fiyat; }
+  el.innerHTML = `<div class="shead"><h2>Eksikleri tamamla<em>!!</em></h2>
+    <div class="sozet"><span>${eksik.length} eksik cilt</span><span>${liste.length} mağazada stokta</span>${zaman?`<span>Tarama ${zaman}</span>`:""}</div></div>
+    <p class="alt">${zaman ? "Mağazalar her saat yeniden taranıyor." : "Mağaza taraması henüz çalışmadı."}
+    ${liste.length>1 ? "Tek seferde en çok eksiği en ucuza alabileceğin mağaza en üstte." : ""}</p>
+    ${liste.length ? `<div class="stores">${liste.map((s,i)=>{ const hepsi = s.ur.length===eksik.length;
+      return `<article class="store${i===0?" best":""}${hepsi?" all":""}">
       <header><h3>${esc(magazaAd(s.id))}</h3><span class="cnt">${s.ur.length}/${eksik.length} eksik</span></header>
-      ${s.ur.length===eksik.length?`<span class="tag">Eksiklerin hepsi burada</span>`:""}
-      <ul>${s.ur.map(u=>`<li><a href="${esc(u.x.url)}" target="_blank" rel="noopener">${esc(u.m.ad)} ${u.n}. cilt</a><b>${para(u.x.fiyat)}</b></li>`).join("")}</ul>
+      ${(i===0||hepsi)?`<div class="tags">${i===0?`<span class="tag hot">En iyi seçenek</span>`:""}${hepsi?`<span class="tag">Eksiklerin hepsi burada</span>`:""}</div>`:""}
+      <ul>${s.ur.map(u=>`<li><a href="${esc(u.x.url)}" target="_blank" rel="noopener">${esc(u.m.ad)} ${u.n}. cilt</a><b${u.x.fiyat!=null&&u.x.fiyat===enUcuz[u.m.id+"/"+u.n]?` class="ucuz" title="Bu cildin en ucuz fiyatı"`:""}>${para(u.x.fiyat)}</b></li>`).join("")}</ul>
       ${s.toplam?`<div class="top"><span>Toplam</span><b>${para(s.toplam)}</b></div>`:""}
-    </article>`).join("")}</div>` : ""}
+    </article>`; }).join("")}</div>` : ""}
     ${hicYok.length ? `<p class="yok">Şu an hiçbir mağazada stokta değil: ${hicYok.map(e=>`${esc(e.m.ad)} ${e.n}. cilt`).join(", ")}</p>` : ""}`;
 }
 const b64 = bytes => { let s=""; for (let i=0;i<bytes.length;i+=0x8000) s+=String.fromCharCode(...bytes.subarray(i,i+0x8000)); return btoa(s); };
@@ -101,15 +105,15 @@ function render(){
     const c=hedef(m), a=+m.alinan||0, fark=c-a, n=Math.max(c,a,1), yeniCilt=c>(+m.cikan||0);
     const cells = Array.from({length:n},(_,i)=>`<i class="${i<a?"on":i<c?"miss":""}"></i>`).join("");
     const link = safeUrl(m.link), img = safeImg(m._yeni || m.kapak);
-    return `<article class="m">
+    return `<article class="m${fark>0?" eksik":""}">
       <div class="cover">
         ${img?`<img src="${img}" alt="${esc(m.ad)} kapağı" loading="lazy">`:`<div class="ph">${esc(m.ad)}</div>`}
         ${fark>0?`<span class="stamp">${fark} cilt eksik</span>`:`<span class="stamp ok">Güncel</span>`}
         ${yeniCilt?`<span class="stamp new">Yeni: ${c}. cilt</span>`:""}
       </div>
       <h3>${esc(m.ad)}</h3>
-      <div class="vols"><span>Elimde <b>${a}</b></span><span>Çıkan <b>${c}</b></span></div>
-      <div class="track" aria-hidden="true">${cells}</div>
+      <div class="meta"><div class="vols"><span>Elimde <b>${a}</b></span><span>Çıkan <b>${c}</b></span></div>
+      <div class="track" aria-hidden="true">${cells}</div></div>
       ${fark>0&&STOK?`<div class="buy">${eksikler(m).map(k=>{ const s=stoklu(m,k);
         return `<div class="v"><span>${k}. cilt</span>${s.length?s.slice(0,3).map(x=>`<a class="shop" href="${esc(x.url)}" target="_blank" rel="noopener">${esc(magazaAd(x.magaza))}${x.fiyat!=null?` · ${Math.round(x.fiyat)} TL`:""}</a>`).join(""):`<span class="shop none">stokta yok</span>`}</div>`; }).join("")}</div>`:""}
       ${(link||token)?`<div class="acts">
