@@ -1,0 +1,15 @@
+{
+ "guncel": "2026-10-07T18:00:00+03:00",
+ "magazalar": {"kitapyurdu":"Kitapyurdu","dr":"D&R","bkm":"BKM Kitap","gerekli":"Gerekli Şeyler"},
+ "mangalar": {
+  "dandadan": {"sonGorulen": 7, "ciltler": {"7": [
+   {"magaza":"kitapyurdu","baslik":"Dandadan 7","url":"https://www.kitapyurdu.com/","fiyat":172.9,"stok":true},
+   {"magaza":"dr","baslik":"Dandadan 7","url":"https://www.dr.com.tr/","fiyat":185.5,"stok":true},
+   {"magaza":"gerekli","baslik":"Dandadan 7","url":"https://www.gereklisey.com/","fiyat":179,"stok":true}]}},
+  "hikaru": {"sonGorulen": 8, "ciltler": {"8": [
+   {"magaza":"kitapyurdu","baslik":"Hikaru'nun Veda Ettiği Yaz 8","url":"https://www.kitapyurdu.com/","fiyat":149.25,"stok":true},
+   {"magaza":"bkm","baslik":"Hikaru'nun Veda Ettiği Yaz 8","url":"https://www.bkmkitap.com/","fiyat":155,"stok":true}]}},
+  "berserk": {"sonGorulen": 20, "ciltler": {"20": [
+   {"magaza":"dr","baslik":"Berserk 20","url":"https://www.dr.com.tr/","fiyat":210,"stok":true}]}}
+ }
+}

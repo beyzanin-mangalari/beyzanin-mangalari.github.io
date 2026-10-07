@@ -1,0 +1,122 @@
+[
+ {
+  "id": "berserk",
+  "ad": "Berserk",
+  "cikan": 19,
+  "alinan": 19,
+  "link": "",
+  "kapak": "kapaklar/berserk.jpg"
+ },
+ {
+  "id": "vinland",
+  "ad": "Vinland Saga",
+  "cikan": 11,
+  "alinan": 11,
+  "link": "",
+  "kapak": "kapaklar/vinland.jpg"
+ },
+ {
+  "id": "mashle",
+  "ad": "Mashle",
+  "cikan": 7,
+  "alinan": 7,
+  "link": "",
+  "kapak": "kapaklar/mashle.jpg"
+ },
+ {
+  "id": "sakamoto",
+  "ad": "Sakamoto Days",
+  "cikan": 6,
+  "alinan": 6,
+  "link": "",
+  "kapak": "kapaklar/sakamoto.jpg"
+ },
+ {
+  "id": "dandadan",
+  "ad": "Dandadan",
+  "cikan": 7,
+  "alinan": 6,
+  "link": "",
+  "kapak": "kapaklar/dandadan.jpg"
+ },
+ {
+  "id": "gachiakuta",
+  "ad": "Gachiakuta",
+  "cikan": 10,
+  "alinan": 10,
+  "link": "",
+  "kapak": "kapaklar/gachiakuta.jpg"
+ },
+ {
+  "id": "araf",
+  "ad": "Araf Şeytanları",
+  "cikan": 2,
+  "alinan": 2,
+  "link": "",
+  "kapak": "kapaklar/araf.png"
+ },
+ {
+  "id": "mobpsycho",
+  "ad": "Mob Psycho 100",
+  "cikan": 3,
+  "alinan": 3,
+  "link": "",
+  "kapak": "kapaklar/mobpsycho.jpg"
+ },
+ {
+  "id": "eldenring",
+  "ad": "Elden Ring",
+  "cikan": 1,
+  "alinan": 1,
+  "link": "",
+  "kapak": "kapaklar/eldenring.jpg"
+ },
+ {
+  "id": "nakamura",
+  "ad": "Yürü Be Nakamura",
+  "cikan": 2,
+  "alinan": 2,
+  "link": "",
+  "kapak": "kapaklar/nakamura.jpg"
+ },
+ {
+  "id": "hellsparadise",
+  "ad": "Hell's Paradise: Jigokuraku",
+  "cikan": 2,
+  "alinan": 2,
+  "link": "",
+  "kapak": "kapaklar/hellsparadise.png"
+ },
+ {
+  "id": "titan",
+  "ad": "Titana Saldırı: Çöküşten Önce",
+  "cikan": 5,
+  "alinan": 5,
+  "link": "",
+  "kapak": "kapaklar/titan.jpg"
+ },
+ {
+  "id": "rooster",
+  "ad": "Rooster Fighter",
+  "cikan": 2,
+  "alinan": 2,
+  "link": "",
+  "kapak": "kapaklar/rooster.jpg"
+ },
+ {
+  "id": "teogonia",
+  "ad": "Teogonia",
+  "cikan": 4,
+  "alinan": 4,
+  "link": "",
+  "kapak": "kapaklar/teogonia.jpg"
+ },
+ {
+  "id": "hikaru",
+  "ad": "Hikaru'nun Veda Ettiği Yaz",
+  "cikan": 8,
+  "alinan": 7,
+  "link": "",
+  "kapak": "kapaklar/hikaru.jpg"
+ }
+]

@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Beyza'nın Mangaları</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Beyza'nın manga rafı: seriler, son çıkan ve son alınan ciltler.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* V1 Katalog: Japon kitapçısı kataloğu — beyaz kağıt, mürekkep siyahı, hanko kırmızısı, Bodoni başlıklar */
+:root{
+  --paper:#f7f6f3; --sheet:#ffffff; --ink:#151413; --soft:#3b3936; --muted:#76716a; --rule:#d9d5ce; --hair:rgba(21,20,19,.12);
+  --red:#c1121f; --red-soft:#fbe9ea; --ok:#1d5b46;
+  --serif:"Bodoni Moda","Didot","Bodoni 72",Georgia,serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 15px/1.55 var(--sans);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 max(20px,env(safe-area-inset-left)) 72px;display:flex;flex-direction:column;gap:40px}
+
+/* künye */
+.mast{padding-top:22px;text-align:center;display:flex;flex-direction:column;gap:18px}
+.mast-top{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--ink);padding-bottom:10px;font:500 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--soft)}
+.mast-top .mid{display:none}
+@media (min-width:720px){.mast-top .mid{display:block}}
+h1{font-family:var(--serif);font-weight:500;font-size:clamp(44px,10.5vw,124px);line-height:.92;letter-spacing:-.025em;margin:6px 0 0;font-optical-sizing:auto}
+h1 em{font-style:italic;font-weight:400;display:block;color:var(--red)}
+@media (min-width:720px){h1 em{display:inline}}
+.dek{font-family:var(--serif);font-style:italic;font-size:clamp(16px,2.2vw,20px);color:var(--soft);margin:0 auto;max-width:34ch;text-wrap:balance}
+.stats{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 0;border-block:1px solid var(--ink);box-shadow:0 3px 0 -2px var(--ink);padding:10px 0;font:400 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--soft);font-variant-numeric:tabular-nums}
+.stats span{padding:0 14px}
+.stats span+span{border-left:1px solid var(--rule)}
+.stats b{font:500 15px var(--serif);letter-spacing:0;color:var(--ink);margin-right:4px}
+
+/* düğmeler */
+.btn{font:500 13px var(--sans);letter-spacing:.02em;border:1px solid var(--ink);background:transparent;color:var(--ink);border-radius:0;padding:9px 16px;min-height:40px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;transition:background .15s,color .15s}
+.btn:hover{background:var(--ink);color:var(--sheet)}
+.btn.primary{background:var(--ink);color:var(--sheet)}
+.btn.primary:hover{background:var(--red);border-color:var(--red)}
+.btn.sm{padding:6px 12px;min-height:34px;font-size:12px}
+.btn:disabled{opacity:.5;cursor:wait}
+.mast-top .btn{font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;border:0;padding:8px 0;min-height:36px;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--red)}
+.mast-top .btn:hover{background:none;color:var(--red)}
+
+/* yönetim şeridi */
+.adminbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;border:1px solid var(--ink);background:var(--sheet);padding:10px 14px}
+.adminbar .t{flex:1;font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.adminbar .t::before{content:"";display:inline-block;width:8px;height:8px;background:var(--red);border-radius:50%;margin-right:8px;vertical-align:1px}
+
+/* arama + filtre */
+.bar{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:end;justify-content:space-between;border-bottom:1px solid var(--ink);padding-bottom:12px}
+.bar h2{font:italic 400 clamp(26px,4vw,34px)/1 var(--serif);margin:0;flex:1 0 100%}
+@media (min-width:860px){.bar h2{flex:0 0 auto}}
+.bar input{flex:1 1 220px;min-width:0;font:400 16px var(--sans);padding:10px 2px;border:0;border-bottom:1px solid var(--rule);border-radius:0;background:transparent;color:var(--ink);min-height:44px}
+.bar input:focus{outline:none;border-bottom-color:var(--ink)}
+.bar input::placeholder{color:var(--muted);font-style:italic;font-family:var(--serif)}
+.chips{display:flex;gap:0;border:1px solid var(--ink)}
+.chip{font:500 12px var(--sans);letter-spacing:.04em;padding:0 14px;min-height:40px;border:0;background:transparent;color:var(--soft);cursor:pointer}
+.chip+.chip{border-left:1px solid var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--sheet)}
+.chip:hover:not([aria-pressed="true"]){background:var(--red-soft)}
+
+/* katalog ızgarası */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:48px 34px;counter-reset:no}
+.m{display:flex;flex-direction:column;gap:9px;min-width:0;counter-increment:no}
+.m::before{content:"No. " counter(no,decimal-leading-zero);font:400 11px var(--mono);letter-spacing:.14em;color:var(--muted);border-top:1px solid var(--ink);padding-top:8px;margin-bottom:4px}
+.cover{position:relative;aspect-ratio:2/3;background:var(--sheet);overflow:hidden;
+  box-shadow:0 1px 0 var(--hair),0 18px 28px -18px rgba(21,20,19,.55),0 2px 6px -2px rgba(21,20,19,.2);transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
+.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.22),rgba(255,255,255,.12) 3%,transparent 7%);pointer-events:none}
+.m:hover .cover{transform:translateY(-5px);box-shadow:0 1px 0 var(--hair),0 28px 36px -20px rgba(21,20,19,.6),0 2px 6px -2px rgba(21,20,19,.2)}
+.cover img{width:100%;height:100%;object-fit:cover;display:block}
+.cover .ph{position:absolute;inset:0;display:grid;place-items:center;padding:16px;text-align:center;font:italic 500 22px/1.15 var(--serif);color:var(--ink);background:var(--sheet);border:1px solid var(--rule);outline:1px solid var(--rule);outline-offset:-10px}
+/* eksik: alt kenarda kırmızı şerit; güncel: köşede küçük mühür */
+.stamp{position:absolute;left:0;right:0;bottom:0;z-index:1;background:var(--red);color:#fff;font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;text-align:center;padding:8px 6px}
+.stamp.ok{left:auto;right:10px;bottom:10px;width:46px;height:46px;padding:0;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.92);color:var(--ok);border:1.5px solid var(--ok);font-size:8.5px;letter-spacing:.06em;box-shadow:0 0 0 3px rgba(255,255,255,.5)}
+.stamp.new{left:10px;right:auto;top:10px;bottom:auto;background:var(--ink);color:#fff;padding:5px 8px;font-size:10px}
+.m:has(.stamp:not(.ok):not(.new))::before{color:var(--red);border-top:3px solid var(--red);padding-top:6px}
+.m h3{margin:4px 0 0;font:500 19px/1.15 var(--serif);letter-spacing:-.01em;overflow-wrap:anywhere;text-wrap:balance}
+.vols{display:flex;justify-content:space-between;font:400 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums}
+.vols b{color:var(--ink);font-weight:500}
+.track{display:flex;gap:2px;height:4px}
+.track i{flex:1;background:var(--rule)}
+.track i.on{background:var(--ink)}
+.track i.miss{background:var(--red)}
+.buy{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--rule);margin-top:2px}
+.buy .v{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-bottom:1px solid var(--rule)}
+.buy .v>span{font:500 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--red)}
+.shop{font:400 13px var(--sans);color:var(--ink);text-decoration:none;display:flex;justify-content:space-between;gap:8px;padding:5px 0;min-height:30px;align-items:center;border-bottom:1px dotted var(--rule)}
+.shop:last-child{border-bottom:0}
+.shop::after{content:"→";color:var(--red);font-family:var(--mono)}
+.shop:hover{color:var(--red)}
+.shop.none{color:var(--muted);font-style:italic;font-family:var(--serif)}
+.shop.none::after{content:none}
+.acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.empty{border-block:1px solid var(--ink);padding:56px 20px;text-align:center;color:var(--muted)}
+.empty strong{display:block;font:italic 400 30px var(--serif);color:var(--ink);margin-bottom:6px}
+
+/* sipariş fişi */
+.sepet{display:flex;flex-direction:column;gap:16px;background:var(--sheet);border:1px solid var(--ink);padding:clamp(18px,3vw,32px);position:relative}
+.sepet::before{content:"Eksik listesi";position:absolute;top:-1px;right:-1px;background:var(--red);color:#fff;font:500 10px var(--mono);letter-spacing:.16em;text-transform:uppercase;padding:6px 12px}
+.sepet h2{font:500 clamp(30px,5vw,48px)/1 var(--serif);letter-spacing:-.02em;margin:0;padding-right:110px;text-wrap:balance}
+.sepet .alt{color:var(--soft);font-size:14px;margin:0;max-width:70ch}
+.stores{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:0;border-top:1px solid var(--ink)}
+.store{padding:16px 0;display:flex;flex-direction:column;gap:10px;min-width:0;border-bottom:1px solid var(--rule)}
+@media (min-width:600px){.stores{gap:0 28px}.store{border-bottom:0}}
+.store.all .tag{background:var(--ok);color:#fff;padding:3px 8px;align-self:flex-start}
+.store header{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.store h3{margin:0;font:italic 500 22px var(--serif)}
+.store .cnt{font:400 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.store .tag{font:500 10px var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--ok)}
+.store ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.store li{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:14px;padding:7px 0;border-bottom:1px dotted var(--rule)}
+.store li a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--red);text-underline-offset:3px;overflow-wrap:anywhere}
+.store li a:hover{color:var(--red)}
+.store li b{font:500 13px var(--mono);white-space:nowrap;font-variant-numeric:tabular-nums}
+.store .top{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;border-top:1px solid var(--ink);padding-top:8px;display:flex;justify-content:space-between}
+.yok{font-size:13px;color:var(--muted);margin:0;font-style:italic}
+
+/* kolofon */
+.colophon{border-top:1px solid var(--ink);padding-top:14px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;font:400 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* pencereler */
+.overlay{position:fixed;inset:0;background:rgba(21,20,19,.5);display:grid;place-items:center;padding:16px;z-index:10}
+.modal{background:var(--sheet);color:var(--ink);border:1px solid var(--ink);width:100%;max-width:480px;max-height:calc(100dvh - 32px);overflow:auto;padding:28px;display:flex;flex-direction:column;gap:16px;box-shadow:12px 12px 0 -1px var(--red)}
+.modal h2{font:italic 500 30px/1.05 var(--serif);margin:0;border-bottom:1px solid var(--ink);padding-bottom:12px}
+label{display:flex;flex-direction:column;gap:5px;font:500 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
+.modal input{font:400 16px var(--sans);letter-spacing:0;text-transform:none;padding:10px 0;border:0;border-bottom:1px solid var(--rule);border-radius:0;background:transparent;color:var(--ink);min-width:0;min-height:42px}
+.modal input:focus{outline:none;border-bottom:1px solid var(--ink);box-shadow:0 1px 0 var(--ink)}
+.modal input[type=file]{border:1px dashed var(--rule);padding:10px;font-size:13px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.err{color:var(--red);font-size:13px;min-height:1em;margin:0}
+.mrow{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+#delBtn{margin-right:auto;border-color:var(--red);color:var(--red)}
+#delBtn:hover{background:var(--red);color:#fff}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;font:500 13px var(--sans);z-index:20;border-left:4px solid var(--red);max-width:calc(100% - 32px)}
+
+@media (max-width:520px){
+  .wrap{gap:30px;padding-inline:16px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:34px 16px}
+  .m h3{font-size:16px}
+  .stats span{padding:0 10px}.stats span+span{border-left:0}
+  .chips{width:100%}.chip{flex:1;padding:0 6px}
+  .stamp{font-size:10px;letter-spacing:.08em}
+  .sepet h2{padding-right:0;margin-top:18px}
+  .modal{padding:22px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div class="mast-top">
+      <span>Koleksiyon kataloğu</span>
+      <span class="mid">Manga · Cilt takibi</span>
+      <button class="btn" id="adminBtn" type="button">Yönetim</button>
+    </div>
+    <h1>Beyza'nın <em>Mangaları</em></h1>
+    <p class="dek">Raftaki her seri, elimdeki son cilt ve eksik kalanlar tek sayfada.</p>
+    <div class="stats" id="stats"><span>Raf yükleniyor…</span></div>
+  </header>
+
+  <div class="adminbar" id="adminbar" hidden>
+    <span class="t">Yönetim modu açık</span>
+    <button class="btn primary sm" id="addBtn" type="button">+ Manga ekle</button>
+    <button class="btn sm" id="logoutBtn" type="button">Çıkış</button>
+  </div>
+
+  <section class="sepet" id="sepet" hidden></section>
+
+  <div class="bar">
+    <h2>Raftakiler</h2>
+    <input id="q" type="search" placeholder="Seri ara…" aria-label="Seri ara">
+    <div class="chips" role="group" aria-label="Filtre">
+      <button class="chip" type="button" data-f="all" aria-pressed="true">Hepsi</button>
+      <button class="chip" type="button" data-f="miss" aria-pressed="false">Eksik cilt</button>
+      <button class="chip" type="button" data-f="ok" aria-pressed="false">Güncel</button>
+    </div>
+  </div>
+
+  <div id="list"><div class="empty"><strong>Raf hazırlanıyor</strong>Mangalar birazdan burada dizilecek. Yönetim'den yeni seri ekleyebilirsin.</div></div>
+
+  <footer class="colophon"><span>Beyza'nın Mangaları</span><span>Mağaza stokları saatlik taranır</span></footer>
+</div>
+
+<div class="overlay" id="pwBox" hidden>
+  <form class="modal" id="pwForm">
+    <h2>Yönetim girişi</h2>
+    <label>Şifre<input id="pw" type="password" autocomplete="current-password"></label>
+    <p class="err" id="pwErr"></p>
+    <div class="mrow"><button class="btn" type="button" data-close>Vazgeç</button><button class="btn primary" type="submit">Giriş</button></div>
+  </form>
+</div>
+
+<div class="overlay" id="edBox" hidden>
+  <form class="modal" id="edForm">
+    <h2 id="edTitle">Manga ekle</h2>
+    <label>Seri adı<input id="f_ad" required maxlength="80"></label>
+    <div class="row2">
+      <label>Son çıkan cilt<input id="f_cikan" type="number" min="0" max="999" required></label>
+      <label>Son alınan cilt<input id="f_alinan" type="number" min="0" max="999" required></label>
+    </div>
+    <label>Link (satın alma / okuma)<input id="f_link" type="url" placeholder="https://…"></label>
+    <label>Mağazalarda arama adı (boşsa seri adı)<input id="f_ara" maxlength="80" placeholder="ör. Jigokuraku"></label>
+    <label>Kapak fotoğrafı<input id="f_kapak" type="file" accept="image/*"></label>
+    <p class="err" id="edErr"></p>
+    <div class="mrow">
+      <button class="btn" type="button" id="delBtn" hidden>Sil</button>
+      <button class="btn" type="button" data-close>Vazgeç</button>
+      <button class="btn primary" type="submit" id="saveBtn">Kaydet</button>
+    </div>
+  </form>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>
