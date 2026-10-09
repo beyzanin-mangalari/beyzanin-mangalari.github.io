@@ -1,55 +1,5 @@
 [
  {
-  "id": "berserk",
-  "ad": "Berserk",
-  "cikan": 19,
-  "alinan": 19,
-  "link": "",
-  "kapak": "kapaklar/berserk.jpg"
- },
- {
-  "id": "vinland",
-  "ad": "Vinland Saga",
-  "cikan": 11,
-  "alinan": 11,
-  "link": "",
-  "kapak": "kapaklar/vinland.jpg",
-  "ara": "Vinland Destanı"
- },
- {
-  "id": "mashle",
-  "ad": "Mashle",
-  "cikan": 7,
-  "alinan": 7,
-  "link": "",
-  "kapak": "kapaklar/mashle.jpg"
- },
- {
-  "id": "sakamoto",
-  "ad": "Sakamoto Days",
-  "cikan": 6,
-  "alinan": 6,
-  "link": "",
-  "kapak": "kapaklar/sakamoto.jpg",
-  "ara": "Sakamoto Günleri"
- },
- {
-  "id": "dandadan",
-  "ad": "Dandadan",
-  "cikan": 7,
-  "alinan": 6,
-  "link": "",
-  "kapak": "kapaklar/dandadan.jpg"
- },
- {
-  "id": "gachiakuta",
-  "ad": "Gachiakuta",
-  "cikan": 10,
-  "alinan": 10,
-  "link": "",
-  "kapak": "kapaklar/gachiakuta.jpg"
- },
- {
   "id": "araf",
   "ad": "Araf Şeytanları",
   "cikan": 2,
@@ -58,12 +8,20 @@
   "kapak": "kapaklar/araf.png"
  },
  {
-  "id": "mobpsycho",
-  "ad": "Mob Psycho 100",
-  "cikan": 3,
-  "alinan": 3,
+  "id": "berserk",
+  "ad": "Berserk",
+  "cikan": 19,
+  "alinan": 19,
   "link": "",
-  "kapak": "kapaklar/mobpsycho.jpg"
+  "kapak": "kapaklar/berserk.jpg"
+ },
+ {
+  "id": "dandadan",
+  "ad": "Dandadan",
+  "cikan": 7,
+  "alinan": 6,
+  "link": "",
+  "kapak": "kapaklar/dandadan.jpg"
  },
  {
   "id": "eldenring",
@@ -75,12 +33,12 @@
   "ara": "Altın Ağaç'a Yolculuk"
  },
  {
-  "id": "nakamura",
-  "ad": "Yürü Be Nakamura",
-  "cikan": 2,
-  "alinan": 2,
+  "id": "gachiakuta",
+  "ad": "Gachiakuta",
+  "cikan": 10,
+  "alinan": 10,
   "link": "",
-  "kapak": "kapaklar/nakamura.jpg"
+  "kapak": "kapaklar/gachiakuta.jpg"
  },
  {
   "id": "hellsparadise",
@@ -92,12 +50,37 @@
   "ara": "Cehennemdeki Cennet"
  },
  {
-  "id": "titan",
-  "ad": "Titana Saldırı: Çöküşten Önce",
-  "cikan": 5,
-  "alinan": 5,
+  "id": "hikaru",
+  "ad": "Hikaru'nun Veda Ettiği Yaz",
+  "cikan": 8,
+  "alinan": 7,
   "link": "",
-  "kapak": "kapaklar/titan.jpg"
+  "kapak": "kapaklar/hikaru.jpg"
+ },
+ {
+  "id": "mmv1hn8e0",
+  "kapak": "kapaklar/mmv1hn8e0-mv1hn8ej.jpg",
+  "ad": "Invincible",
+  "cikan": 8,
+  "alinan": 7,
+  "link": "https://www.gerekliseyler.com.tr/arama/Invincible",
+  "ara": "Invincible"
+ },
+ {
+  "id": "mashle",
+  "ad": "Mashle",
+  "cikan": 7,
+  "alinan": 7,
+  "link": "",
+  "kapak": "kapaklar/mashle.jpg"
+ },
+ {
+  "id": "mobpsycho",
+  "ad": "Mob Psycho 100",
+  "cikan": 3,
+  "alinan": 3,
+  "link": "",
+  "kapak": "kapaklar/mobpsycho.jpg"
  },
  {
   "id": "rooster",
@@ -108,6 +91,15 @@
   "kapak": "kapaklar/rooster.jpg"
  },
  {
+  "id": "sakamoto",
+  "ad": "Sakamoto Days",
+  "cikan": 6,
+  "alinan": 6,
+  "link": "",
+  "kapak": "kapaklar/sakamoto.jpg",
+  "ara": "Sakamoto Günleri"
+ },
+ {
   "id": "teogonia",
   "ad": "Teogonia",
   "cikan": 4,
@@ -116,11 +108,28 @@
   "kapak": "kapaklar/teogonia.jpg"
  },
  {
-  "id": "hikaru",
-  "ad": "Hikaru'nun Veda Ettiği Yaz",
-  "cikan": 8,
-  "alinan": 7,
+  "id": "titan",
+  "ad": "Titana Saldırı: Çöküşten Önce",
+  "cikan": 5,
+  "alinan": 5,
   "link": "",
-  "kapak": "kapaklar/hikaru.jpg"
+  "kapak": "kapaklar/titan.jpg"
+ },
+ {
+  "id": "vinland",
+  "ad": "Vinland Saga",
+  "cikan": 11,
+  "alinan": 11,
+  "link": "",
+  "kapak": "kapaklar/vinland.jpg",
+  "ara": "Vinland Destanı"
+ },
+ {
+  "id": "nakamura",
+  "ad": "Yürü Be Nakamura",
+  "cikan": 2,
+  "alinan": 2,
+  "link": "",
+  "kapak": "kapaklar/nakamura.jpg"
  }
 ]
