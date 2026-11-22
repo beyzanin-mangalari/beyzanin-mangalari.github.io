@@ -3,7 +3,7 @@
 (() => {
   const $ = s => document.querySelector(s), root = document.documentElement;
   const lHero = $("#leafHero"), lSepet = $("#leafSepet"), sepet = $("#sepet");
-  const shelf = $("#shelf"), room = $("#room"), sesBtn = $("#sesBtn"), cue = $("#cue");
+  const shelf = $("#shelf"), room = $("#room"), sesBtn = $("#sesBtn"), hizBtn = $("#hizBtn"), cue = $("#cue");
   const mq = matchMedia("(prefers-reduced-motion: reduce)");
   const ACI = 96;            // tam çevrilmede açı; 90°'yi geçince sayfa görünmez olur
   const ORIGIN = 0.12;       // CSS perspective-origin x (12%)
@@ -113,8 +113,16 @@
   });
   cue.addEventListener("click", () => window.scrollTo({top: T, behavior: "smooth"}));
 
+  // hızlı mod: kullanıcı düğmeyle sayfa çevirmeyi + animasyonları kapatır (hareket azaltma ile aynı düz düzen)
+  let hizli = false;
+  try { hizli = localStorage.getItem("bm_hizli") === "1"; } catch (e) {}
   function mod(){
-    flip = !mq.matches;
+    flip = !mq.matches && !hizli;
+    ilk = true; // mod değişirken sayfa sesi çalmasın
+    root.classList.toggle("hizli", hizli);
+    hizBtn.hidden = mq.matches; // sistem zaten hareketi kapatıyorsa düğmeye gerek yok
+    hizBtn.setAttribute("aria-pressed", String(hizli));
+    hizBtn.title = hizli ? "Hızlı geçiş açık (animasyonlar kapalı)" : "Animasyonsuz hızlı geçiş";
     root.classList.toggle("flip", flip);
     root.classList.toggle("sda", flip && SDA);
     sesBtn.hidden = !flip;
@@ -219,6 +227,13 @@
     ses = !ses; sesGoster();
     try { localStorage.setItem("bm_ses", ses ? "1" : "0"); } catch (e) {}
     if (ses){ ac0(); setTimeout(() => hisirti(1), 400); }
+  });
+  hizBtn.addEventListener("click", () => {
+    const odak = flip && window.scrollY >= R - 1; // raftayken hızlıya geçilirse düz düzende de rafta kal
+    hizli = !hizli;
+    try { localStorage.setItem("bm_hizli", hizli ? "1" : "0"); } catch (e) {}
+    mod();
+    if (odak) $("#shelf").scrollIntoView({block: "start"});
   });
   sesGoster();
   mod();

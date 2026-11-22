@@ -1,0 +1,16 @@
+# Sitedeki "Tara" düğmesi bu dala tara-istek.json yazar; bu iş de main'deki tarama workflow'unu başlatır.
+# (Yazma anahtarı yalnız dosya yazabiliyor; workflow'u başlatma iznini GITHUB_TOKEN veriyor.)
+name: Tarama isteği
+on:
+  push:
+    branches: [site]
+    paths: [tara-istek.json]
+permissions:
+  actions: write
+jobs:
+  baslat:
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh workflow run tara.yml --ref main -R ${{ github.repository }}
+        env:
+          GH_TOKEN: ${{ github.token }}
