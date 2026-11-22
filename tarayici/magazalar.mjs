@@ -1,6 +1,8 @@
 // Türk kitap/manga mağazaları için arama tarayıcıları. Bağımlılık yok: Node 20+ yerleşik fetch.
 // Her magaza.ara(sorgu) -> [{ baslik, url, fiyat (TL | null), stok (bool), yayinci?, dil?, kategori? }], asla throw etmez.
 // stok yalnızca şu an sepete eklenip gönderilebilen ilan için true (ön sipariş / tükendi false).
+// on: ön siparişte (stok false olur). Kartta görünmüyorsa tara.mjs ürün sayfasından (urunKontrol) bulur.
+const ONSIP = /Ön Sipari[sş]/i;
 
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
 
@@ -57,7 +59,8 @@ async function kitapyurdu(q) {
       baslik: metin(a[2]),
       url: coz(a[1]).replace(/\?.*$/, ""),
       fiyat: tl(bul(b, /ky-product-sell-price[^>]*>\s*([\d.,]+)/)),
-      stok: /data-action="add-to-cart"/.test(bul(b, /(<[^>]*ky-product-cta[^>]*>)/) ?? ""),
+      stok: /data-action="add-to-cart"/.test(bul(b, /(<[^>]*ky-product-cta[^>]*>)/) ?? "") && !ONSIP.test(b),
+      on: ONSIP.test(b),
     };
   }).filter(Boolean);
 }
@@ -79,7 +82,8 @@ async function dr(q) {
         url: new URL(coz(a[1]), "https://www.dr.com.tr").href,
         // "Sepette" kampanya fiyatı varsa o ödenen fiyat, yoksa normal fiyat
         fiyat: tl(bul(b, /campaign-price-old">[^<]*<\/span>\s*<span>([^<]*)/) ?? bul(b, /class="prd-price"[^>]*>([^<]*)/)),
-        stok: !/item_stock&quot;:&quot;No/.test(b) && /js-add-basket/.test(b),
+        stok: !/item_stock&quot;:&quot;No/.test(b) && /js-add-basket/.test(b) && !ONSIP.test(b),
+        on: ONSIP.test(b),
         dil: coz(bul(b, /data-prd-lang="([^"]*)"/) ?? ""), // "Türkçe" / "İngilizce"
       });
     }
@@ -119,7 +123,8 @@ async function kitapsepeti(q) {
         baslik: coz(a[2]).trim(),
         url: new URL(coz(a[1]), "https://www.kitapsepeti.com").href,
         fiyat: tl(bul(b, /class="product-price">([^<]*)/)),
-        stok: !/class="out-of-stock/.test(b),
+        stok: !/class="out-of-stock/.test(b) && !ONSIP.test(b),
+        on: ONSIP.test(b),
       });
     }
     const toplam = +bul(h, /Toplam <span[^>]*>(\d+)/) || 0;
@@ -142,7 +147,8 @@ async function gerekli(q) {
         baslik: coz(a[2]),
         url: new URL(coz(a[1]), "https://www.gerekliseyler.com.tr").href,
         fiyat: tl(bul(b, /showcase-price-new">([^<]*)/)),
-        stok: !/no-stock-button|sold-out-label/.test(b) && /data-selector="add-to-cart"/.test(b),
+        stok: !/no-stock-button|sold-out-label/.test(b) && /data-selector="add-to-cart"/.test(b) && !ONSIP.test(b),
+        on: ONSIP.test(b),
         yayinci: metin(bul(b, /showcase-brand">\s*<a[^>]*>([^<]*)/) ?? ""), // ithal baskılarda Kodansha, Viz Media...
       });
     }
@@ -165,6 +171,7 @@ async function destek(q) {
         url: new URL(coz(a[1]), "https://destekdukkan.com").href,
         fiyat: tl(bul(b, /class="fiyat" data-price="([^"]*)"/)),
         stok: !/^\s*outofstock/.test(b) && !/onsiparis-arrow/.test(b) && /h-sepete-ekle/.test(b), // ön sipariş stok sayılmaz
+        on: /onsiparis-arrow/.test(b),
       });
     }
     if (!new RegExp(`[&;]p=${p + 1}"`).test(h)) break;
@@ -181,7 +188,7 @@ export const MAGAZALAR = [
   magaza("destekdukkan", "Destek Dükkan", destek),
 ];
 
-// Ürün sayfasını açıp arama kartının söylediğini doğrular: { url (yönlendirme sonrası), baslik (<title>), stok } | null.
+// Ürün sayfasını açıp arama kartının söylediğini doğrular: { url (yönlendirme sonrası), baslik (<title>), stok, on } | null.
 // Arama kartı ön siparişi göstermeyebiliyor (D&R kartı "sepete ekle", sayfası "Ön Sipariş Verin"), o yüzden stok sayfadan:
 // altı mağazanın hepsi schema.org availability yazıyor; InStock olmalı ve ön sipariş yazısı olmamalı.
 export async function urunKontrol(url) {
@@ -193,6 +200,7 @@ export async function urunKontrol(url) {
       url: r.url,
       baslik: metin(bul(h, /<title>([^<]*)/) ?? ""),
       stok: /schema\.org\\?\/InStock/.test(h) && !/schema\.org\\?\/(OutOfStock|PreOrder|SoldOut|Discontinued)|Ön Sipariş Verin|Ön Siparişte/.test(h),
+      on: /schema\.org\?\/PreOrder|Ön Sipariş Verin|Ön Siparişte/.test(h),
     };
   } catch { return null; }
 }

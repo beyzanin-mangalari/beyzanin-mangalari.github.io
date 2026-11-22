@@ -129,7 +129,7 @@ async function hepsiburada(q) {
     for (const x of d.products) {
       const v = x.variantList?.find((v) => v.isDefault) ?? x.variantList?.[0];
       if (!v) continue;
-      sonuc.push({ baslik: v.name, url: new URL(v.url, "https://www.hepsiburada.com").href, fiyat: tl(v.listing?.priceInfo?.price), stok: v.procurable === true && !v.listing?.isPreOrder });
+      sonuc.push({ baslik: v.name, url: new URL(v.url, "https://www.hepsiburada.com").href, fiyat: tl(v.listing?.priceInfo?.price), stok: v.procurable === true && !v.listing?.isPreOrder, on: !!v.listing?.isPreOrder });
     }
     if (p >= (d.lastPage ?? 1)) break;
   }
@@ -151,7 +151,8 @@ async function amazon(q) {
       const baslik = metin(b.match(/<h2[^>]*aria-label="([^"]*)"/)?.[1] ?? b.match(/<h2[^>]*>([\s\S]*?)<\/h2>/)?.[1] ?? "");
       if (!baslik) continue;
       const fiyat = tl(b.match(/<span class="a-price"[^>]*><span class="a-offscreen">([^<]*)/)?.[1]);
-      sonuc.push({ baslik, url: `https://www.amazon.com.tr/dp/${asin}`, fiyat, stok: fiyat != null && /submit\.addToCart|Seçenekleri gör/.test(b) });
+      const on = /Ön sipari[sş]/i.test(b);
+      sonuc.push({ baslik, url: `https://www.amazon.com.tr/dp/${asin}`, fiyat, stok: !on && fiyat != null && /submit\.addToCart|Seçenekleri gör/.test(b), on });
     }
     if (!/<a[^>]*class="[^"]*s-pagination-next/.test(h)) break;
   }

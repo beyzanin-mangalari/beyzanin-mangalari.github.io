@@ -6,10 +6,11 @@ on:
 permissions:
   contents: write
   pages: write
-concurrency: tara
+  actions: write
 jobs:
   tara:
     runs-on: ubuntu-latest
+    concurrency: tara
     steps:
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
@@ -19,7 +20,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      # GH_TOKEN: tara.mjs canlı ilerlemeyi `ilerleme` dalına yazar (sitedeki tarama paneli okur)
       - run: node tarayici/tara.mjs site/mangalar.json site/stok.json
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Sonucu site dalına yaz
         working-directory: site
         run: |
@@ -31,5 +35,19 @@ jobs:
           git push origin site
       # GITHUB_TOKEN ile yapılan push Pages'i kendiliğinden yeniden yayınlamıyor
       - run: gh api -X POST repos/${{ github.repository }}/pages/builds
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+  # GitHub'ın saatlik zamanlayıcısı pratikte 6-9 saatte bir çalışıyor; bu yüzden her tarama ~45 dk sonra
+  # bir sonrakini kendisi başlatır. Bekleme ayrı işte: elle başlatılan tarama beklemeye takılmaz, yeni bekleme eskisini iptal eder.
+  # Zamanlayıcı yedek olarak kalır (zincir koparsa yeniden başlatır).
+  sonraki:
+    needs: tara
+    runs-on: ubuntu-latest
+    concurrency:
+      group: bekle
+      cancel-in-progress: true
+    steps:
+      - run: sleep 2700 && gh workflow run tara.yml --ref main -R ${{ github.repository }}
         env:
           GH_TOKEN: ${{ github.token }}

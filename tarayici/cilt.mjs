@@ -38,5 +38,5 @@ export const urunSayfasi = url => { try { return !/^\/?$|^\/(arama|search)\b/i.t
 // Türkçe baskı sayılır: başlıkta "cilt" geçiyorsa ya da en az iki farklı mağazada satılıyorsa
 export const turkceCilt = ilanlar => ilanlar.some(x => /\bcilt\b/i.test(x.baslik)) || new Set(ilanlar.map(x => x.magaza)).size >= 2;
 
-// Yeni cilt kanıtı: en az iki farklı mağazada stokta (tek mağaza / ön sipariş / tükenmiş ilan "yeni cilt" yaratamaz)
-export const kesinCilt = ilanlar => new Set(ilanlar.filter(x => x.stok).map(x => x.magaza)).size >= 2;
+// Yeni cilt kanıtı: en az bir mağazada satışta ya da ön siparişte (tükenmiş / stok bilgisi olmayan ilan "yeni cilt" yaratamaz)
+export const kesinCilt = ilanlar => ilanlar.some(x => x.stok || x.on);

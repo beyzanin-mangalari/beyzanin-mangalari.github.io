@@ -45,9 +45,9 @@ assert.ok(turkceCilt([{magaza:"a",baslik:"Gachiakuta Cilt 10"}]));
 assert.ok(turkceCilt([{magaza:"a",baslik:"Berserk 20"},{magaza:"b",baslik:"Berserk 20"}]));
 assert.ok(!turkceCilt([{magaza:"gerekliseyler",baslik:"Vinland Saga 14"}]));
 // yeni cilt için iki mağazada stok şart: tek mağaza ya da stoksuz ilan "Yeni: 20. cilt" yaratamaz
-assert.ok(!kesinCilt([{magaza:"dr",baslik:"Berserk 20",stok:true}]));
-assert.ok(!kesinCilt([{magaza:"dr",baslik:"Berserk 20",stok:true},{magaza:"bkm",baslik:"Berserk 20",stok:false}]));
-assert.ok(kesinCilt([{magaza:"dr",baslik:"Berserk 20",stok:true},{magaza:"bkm",baslik:"Berserk 20",stok:true}]));
+assert.ok(kesinCilt([{magaza:"dr",baslik:"Berserk 20",stok:true}]));
+assert.ok(kesinCilt([{magaza:"dr",baslik:"Berserk 20",stok:false,on:true}]));
+assert.ok(!kesinCilt([{magaza:"dr",baslik:"Berserk 20",stok:false},{magaza:"bkm",baslik:"Berserk 20",stok:false}]));
 // ana sayfa / arama linki ürün değil (önizleme verisindeki "Berserk 20" → https://www.dr.com.tr/)
 assert.ok(!urunSayfasi("https://www.dr.com.tr/"));
 assert.ok(!urunSayfasi("https://www.dr.com.tr"));
